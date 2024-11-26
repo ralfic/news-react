@@ -5,12 +5,14 @@ import { Image } from './Image';
 export function NewsBanner({ item, size = 'lg' }) {
   return (
     <li className={clsx('flex gap-3', size === 'lg' && 'flex-col')}>
-      {size === 'lg' && <Image image={item.image} />}
-      {size === 'sm' && item.image !== 'None' ? (
-        <img className="w-16 h-16 ml-4" src={item.image} />
+      {size === 'lg' ? (
+        <Image image={item.image} />
+      ) : item.image !== 'None' ? (
+        <img className="  " src={item.image} />
       ) : (
         <div className="bg-gray-200 h-16 w-16 ml-4 flex-initial"></div>
       )}
+
       <div
         className={clsx(
           'flex flex-col flex-1',
