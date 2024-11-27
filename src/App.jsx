@@ -11,9 +11,9 @@ export function App() {
 
 function AppLayout({ header, children }) {
   return (
-    <div>
+    <>
       {header}
       <div className="px-6 mt-4">{children}</div>
-    </div>
+    </>
   );
 }

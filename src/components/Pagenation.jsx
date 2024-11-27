@@ -8,7 +8,6 @@ export function Pagenation({
   hendelPrevPage,
   hendelPageClick,
 }) {
-  console.log(totalPages);
   return (
     <div className="flex gap-3">
       <button
