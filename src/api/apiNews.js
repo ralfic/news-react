@@ -19,7 +19,6 @@ export async function getNews({
         keywords,
       },
     });
-
     return response.data.news;
   } catch (error) {
     console.log(error);
