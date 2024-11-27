@@ -6,5 +6,5 @@
 
 html,
 body {
-  @apply h-full max-h-full font-inter;
+  @apply h-full max-h-full font-inter scrollbar-none;
 }
