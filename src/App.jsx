@@ -13,7 +13,7 @@ function AppLayout({ header, children }) {
   return (
     <>
       {header}
-      <div className="px-6 mt-4">{children}</div>
+      <div className="px-6 mt-6">{children}</div>
     </>
   );
 }

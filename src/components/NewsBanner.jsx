@@ -1,9 +1,10 @@
 import { formatTimeAgo } from '../helpers/formatTimeAgo';
+import { withSkeleton } from '../helpers/hocs/withSkeleton';
 import { Image } from './Image';
 
-export function NewsBanner({ item }) {
+function NewsBanner({ item }) {
   return (
-    <li className="flex gap-3 flex-col">
+    <div className="flex gap-3 flex-col">
       <Image image={item?.image} />
       <div className="flex flex-col flex-1 gap-2">
         <h3 className="font-semibold text-lg leading-6">{item?.title}</h3>
@@ -11,6 +12,8 @@ export function NewsBanner({ item }) {
           item?.published
         )} by ${item?.author}`}</p>
       </div>
-    </li>
+    </div>
   );
 }
+
+export const NewsBannerWhithSkeleton = withSkeleton(NewsBanner, 'lg', 1);

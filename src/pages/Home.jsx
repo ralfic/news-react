@@ -1,55 +1,42 @@
-import { useEffect } from 'react';
-import { NewsBanner } from '../components/NewsBanner';
+import { NewsBannerWhithSkeleton } from '../components/NewsBanner';
 import { useState } from 'react';
 import { getCategories, getNews } from '../api/apiNews';
-import { SkeletonNews } from '../components/Skeleton';
-import { NewsList } from '../components/NewsList.';
+import { NewsListWithSkeleton } from '../components/NewsList.';
 import { Pagenation } from '../components/Pagenation';
 import { Categories } from '../components/Categories';
 import { Search } from '../components/Search';
+import { PAGE_SIZE, TOTAL_PAGES } from '../constants';
+import { useQuery } from 'react-query';
 import { useDebounce } from '../hooks/useDebounce';
 
 export function Home() {
-  const [newsList, setNewsLsit] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [categories, setCategories] = useState([]);
-  const [selectCategory, setSelectCategory] = useState('All');
+  const [selectCategory, setSelectCategory] = useState("All");
   const [keywords, setKeywords] = useState('');
-  const totalPages = 10;
-  const pageSize = 10;
-  const debouncedKeywords = useDebounce(keywords, 1500);
 
-  useEffect(() => {
-    async function featcCategories() {
-      try {
-        const data = await getCategories();
-        setCategories(['All', ...data]);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    featcCategories();
-  }, []);
+  const debounceKeywords = useDebounce(keywords, 1000);
 
-  useEffect(() => {
-    async function featchNews(currentPage) {
-      try {
-        setIsLoading(true);
-        const data = await getNews({
-          page_number: currentPage,
-          page_size: pageSize,
-          category: selectCategory === 'All' ? null : selectCategory,
-          keywords,
-        });
-        setNewsLsit(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
+  const { isLoading, data } = useQuery(
+    [currentPage, selectCategory, debounceKeywords],
+    () =>
+      getNews({
+        page_number: currentPage,
+        page_size: PAGE_SIZE,
+        category: selectCategory === 'All' ? null : selectCategory,
+        keywords: keywords,
+      }),
+    {
+      keepPreviousData: true,
     }
-    featchNews(currentPage);
-  }, [currentPage, selectCategory, debouncedKeywords]);
+  );
+
+  const { data: dataCategories } = useQuery(
+    'getCategories',
+    () => getCategories(),
+    {
+      keepPreviousData: true,
+    }
+  );
 
   function hendelNextPage() {
     setCurrentPage(currentPage + 1);
@@ -64,27 +51,29 @@ export function Home() {
   }
 
   return (
-    <div className="flex flex-col w-full justify-center">
+    <div className="w-full flex flex-col justify-center">
       <div>
-        <Categories
-          categories={categories}
-          selectCategory={selectCategory}
-          setSelectCategory={setSelectCategory}
-        />
+        {dataCategories && (
+          <Categories
+            categories={['All', ...dataCategories]}
+            selectCategory={selectCategory}
+            setSelectCategory={setSelectCategory}
+          />
+        )}
       </div>
       <div className="mt-6">
         <Search keywords={keywords} setKeywords={setKeywords} />
       </div>
       <div className="mt-6">
-        {isLoading ? (
-          <SkeletonNews type="lg" />
-        ) : (
-          <NewsBanner item={newsList[0]} />
-        )}
+        <NewsBannerWhithSkeleton
+          isLoading={isLoading}
+          type={'lg'}
+          item={data && data[0]}
+        />
       </div>
       <div className="mx-auto mt-6">
         <Pagenation
-          totalPages={totalPages}
+          totalPages={TOTAL_PAGES}
           currentPage={currentPage}
           hendelNextPage={hendelNextPage}
           hendelPrevPage={hendelPrevPage}
@@ -92,10 +81,10 @@ export function Home() {
         />
       </div>
       <div className="mt-6 ">
-        <NewsList
+        <NewsListWithSkeleton
           isLoading={isLoading}
-          newsList={newsList}
-          pageSize={pageSize}
+          newsList={data}
+          pageSize={PAGE_SIZE}
         />
       </div>
     </div>
