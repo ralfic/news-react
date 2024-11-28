@@ -1,8 +1,15 @@
 import clsx from 'clsx';
+import { forwardRef } from 'react';
 
-export function Categories({ categories, selectCategory, setSelectCategory }) {
+export const Categories = forwardRef(function (
+  { categories, selectCategory, setSelectCategory },
+  ref
+) {
   return (
-    <div className="flex gap-2 items-start overflow-x-auto whitespace-nowrap box-border scrollbar-none">
+    <div
+      className="flex gap-2 items-start overflow-x-auto whitespace-nowrap box-border scrollbar-none scroll-smooth"
+      ref={ref}
+    >
       {categories?.map((category) => (
         <button
           key={category}
@@ -17,4 +24,6 @@ export function Categories({ categories, selectCategory, setSelectCategory }) {
       ))}
     </div>
   );
-}
+});
+
+Categories.displayName = 'Categories';
