@@ -9,7 +9,7 @@ export function Pagenation({
   hendelPageClick,
 }) {
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 mx-auto">
       <button
         className={clsx(
           'hover:text-black transition-colors',

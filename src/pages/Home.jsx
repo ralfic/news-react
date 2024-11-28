@@ -1,17 +1,14 @@
-import { NewsBannerWhithSkeleton } from '../components/NewsBanner';
 import { useState } from 'react';
-import { getCategories, getNews } from '../api/apiNews';
-import { NewsListWithSkeleton } from '../components/NewsList.';
-import { Pagenation } from '../components/Pagenation';
-import { Categories } from '../components/Categories';
-import { Search } from '../components/Search';
-import { PAGE_SIZE, TOTAL_PAGES } from '../constants';
+import { getNews } from '../api/apiNews';
+import { PAGE_SIZE } from '../constants';
 import { useQuery } from 'react-query';
 import { useDebounce } from '../hooks/useDebounce';
+import { LatestNews } from '../components/LatestNews';
+import { NewsByFilters } from '../components/NewsByFilters';
 
 export function Home() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectCategory, setSelectCategory] = useState("All");
+  const [selectCategory, setSelectCategory] = useState('All');
   const [keywords, setKeywords] = useState('');
 
   const debounceKeywords = useDebounce(keywords, 1000);
@@ -30,63 +27,19 @@ export function Home() {
     }
   );
 
-  const { data: dataCategories } = useQuery(
-    'getCategories',
-    () => getCategories(),
-    {
-      keepPreviousData: true,
-    }
-  );
-
-  function hendelNextPage() {
-    setCurrentPage(currentPage + 1);
-  }
-
-  function hendelPrevPage() {
-    setCurrentPage(currentPage - 1);
-  }
-
-  function hendelPageClick(page) {
-    setCurrentPage(page);
-  }
-
   return (
-    <div className="w-full flex flex-col justify-center">
-      <div>
-        {dataCategories && (
-          <Categories
-            categories={['All', ...dataCategories]}
-            selectCategory={selectCategory}
-            setSelectCategory={setSelectCategory}
-          />
-        )}
-      </div>
-      <div className="mt-6">
-        <Search keywords={keywords} setKeywords={setKeywords} />
-      </div>
-      <div className="mt-6">
-        <NewsBannerWhithSkeleton
-          isLoading={isLoading}
-          type={'lg'}
-          item={data && data[0]}
-        />
-      </div>
-      <div className="mx-auto mt-6">
-        <Pagenation
-          totalPages={TOTAL_PAGES}
-          currentPage={currentPage}
-          hendelNextPage={hendelNextPage}
-          hendelPrevPage={hendelPrevPage}
-          hendelPageClick={hendelPageClick}
-        />
-      </div>
-      <div className="mt-6 ">
-        <NewsListWithSkeleton
-          isLoading={isLoading}
-          newsList={data}
-          pageSize={PAGE_SIZE}
-        />
-      </div>
-    </div>
+    <main className="w-full grid grid-cols-2 gap-6 max-lg:grid-cols-1">
+      <LatestNews banners={data} isLoading={isLoading} />
+      <NewsByFilters
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        selectCategory={selectCategory}
+        setSelectCategory={setSelectCategory}
+        keywords={keywords}
+        setKeywords={setKeywords}
+        isLoading={isLoading}
+        news={data}
+      />
+    </main>
   );
 }

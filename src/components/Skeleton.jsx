@@ -6,7 +6,7 @@ export function SkeletonNews({ count = 1, type = 'sm' }) {
     <>
       {[...Array(count)].map((_, index) => (
         <li className="w-full list-none" key={index}>
-          <Skeleton height={type === 'lg' ? 300 : 64} />
+          <Skeleton height={type === 'lg' ? 240 : 64} />
         </li>
       ))}
     </>
