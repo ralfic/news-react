@@ -8,6 +8,7 @@ import { getCategories, getNews } from '../api/apiNews';
 import { useState } from 'react';
 import { useDebounce } from '../hooks/useDebounce';
 import { PaginationWrapper } from './PaginationWrapper';
+import { Slider } from './Slider';
 
 export function NewsByFilters() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,11 +54,13 @@ export function NewsByFilters() {
   return (
     <section className="flex flex-col gap-6">
       {dataCategories && (
-        <Categories
-          categories={['All', ...dataCategories]}
-          selectCategory={selectCategory}
-          setSelectCategory={setSelectCategory}
-        />
+        <Slider>
+          <Categories
+            categories={['All', ...dataCategories]}
+            selectCategory={selectCategory}
+            setSelectCategory={setSelectCategory}
+          />
+        </Slider>
       )}
       <Search keywords={keywords} setKeywords={setKeywords} />
       <PaginationWrapper
