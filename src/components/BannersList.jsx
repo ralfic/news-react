@@ -3,7 +3,7 @@ import { NewsBanner } from './NewsBanner';
 
 function BannerList({ isLoading, banners }) {
   return (
-    <ul className="grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-3">
+    <ul className="grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-3 max-h-[1200px] overflow-y-auto scrollbar-thin ">
       {banners?.map((banner) => (
         <NewsBanner key={banner.id} item={banner} />
       ))}
@@ -11,4 +11,4 @@ function BannerList({ isLoading, banners }) {
   );
 }
 
-export const BannerListWithSkeleton = withSkeleton(BannerList, 'lg', 10, "row");
+export const BannerListWithSkeleton = withSkeleton(BannerList, 'lg', 20, 'row');

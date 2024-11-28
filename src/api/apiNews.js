@@ -38,3 +38,17 @@ export async function getCategories() {
     console.log(error);
   }
 }
+
+export async function getLatestNews() {
+  try {
+    const response = await axios.get(`${BASE_URL}latest-news`, {
+      params: {
+        apiKey: API_KEY,
+      },
+    });
+
+    return response.data.news;
+  } catch (error) {
+    console.log(error);
+  }
+}
