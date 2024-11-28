@@ -1,22 +1,35 @@
 import { useQuery } from 'react-query';
-import { TOTAL_PAGES } from '../constants';
+import { PAGE_SIZE, TOTAL_PAGES } from '../constants';
 import { Categories } from './Categories';
 import { NewsListWithSkeleton } from './NewsList.';
 import { Pagenation } from './Pagenation';
 import { Search } from './Search';
-import { getCategories } from '../api/apiNews';
+import { getCategories, getNews } from '../api/apiNews';
+import { useState } from 'react';
+import { useDebounce } from '../hooks/useDebounce';
+import { PaginationWrapper } from './PaginationWrapper';
 
-export function NewsByFilters({
-  currentPage,
-  setCurrentPage,
-  selectCategory,
-  setSelectCategory,
-  keywords,
-  setKeywords,
-  isLoading,
-  news,
-}) {
-  
+export function NewsByFilters() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectCategory, setSelectCategory] = useState('All');
+  const [keywords, setKeywords] = useState('');
+
+  const debounceKeywords = useDebounce(keywords, 1000);
+
+  const { isLoading, data: news } = useQuery(
+    [currentPage, selectCategory, debounceKeywords],
+    () =>
+      getNews({
+        page_number: currentPage,
+        page_size: PAGE_SIZE,
+        category: selectCategory === 'All' ? null : selectCategory,
+        keywords: keywords,
+      }),
+    {
+      keepPreviousData: true,
+    }
+  );
+
   const { data: dataCategories } = useQuery(
     'getCategories',
     () => getCategories(),
@@ -47,14 +60,17 @@ export function NewsByFilters({
         />
       )}
       <Search keywords={keywords} setKeywords={setKeywords} />
-      <Pagenation
+      <PaginationWrapper
+        top={true}
+        bottom={true}
         totalPages={TOTAL_PAGES}
         currentPage={currentPage}
         hendelNextPage={hendelNextPage}
         hendelPrevPage={hendelPrevPage}
         hendelPageClick={hendelPageClick}
-      />
-      <NewsListWithSkeleton isLoading={isLoading} newsList={news} />
+      >
+        <NewsListWithSkeleton isLoading={isLoading} newsList={news} />
+      </PaginationWrapper>
     </section>
   );
 }
