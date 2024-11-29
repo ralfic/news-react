@@ -15,8 +15,8 @@ export function Pagenation({
     <div className="flex gap-3 mx-auto">
       <button
         className={clsx(
-          'hover:text-black transition-colors',
-          currentPage === 1 && 'text-gray-400'
+          'hover:text-black transition-colors dark:hover:text-indigo-200',
+          currentPage === 1 && 'text-gray-400 dark:text-gray-200'
         )}
         disabled={currentPage === 1}
         onClick={hendelPrevPage}
@@ -27,8 +27,8 @@ export function Pagenation({
         {[...Array(totalPages)].map((_, index) => (
           <button
             className={clsx(
-              'hover:text-black transition-colors',
-              currentPage === index + 1 ? 'text-black' : 'text-gray-500'
+              'hover:text-black transition-colors dark:hover:text-indigo-200',
+              currentPage === index + 1 ? 'text-black dark:text-indigo-400' : 'text-gray-500 dark:text-gray-200'
             )}
             key={index}
             onClick={() => hendelPageClick(index + 1)}
@@ -39,8 +39,8 @@ export function Pagenation({
       </div>
       <button
         className={clsx(
-          'hover:text-black transition-colors',
-          currentPage === totalPages && 'text-gray-400'
+          'hover:text-black transition-colors dark:hover:text-indigo-200',
+          currentPage === totalPages && 'text-gray-400 dark:text-gray-200'
         )}
         disabled={currentPage === totalPages}
         onClick={hendelNextPage}
