@@ -1,5 +1,8 @@
 import clsx from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { IPaginationProps } from '../interfaces';
+
+
 
 export function Pagenation({
   totalPages,
@@ -7,7 +10,7 @@ export function Pagenation({
   hendelNextPage,
   hendelPrevPage,
   hendelPageClick,
-}) {
+}: IPaginationProps) {
   return (
     <div className="flex gap-3 mx-auto">
       <button
