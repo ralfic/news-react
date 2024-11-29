@@ -1,4 +1,8 @@
-export function Image({ image }) {
+interface Props {
+  image: string;
+}
+
+export function Image({ image }: Props) {
   return (
     <div className="w-full bg-gray-200 h-auto pt-[80%] relative">
       {image !== 'None' && (

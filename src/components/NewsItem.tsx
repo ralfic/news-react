@@ -1,6 +1,11 @@
 import { formatTimeAgo } from '../helpers/formatTimeAgo';
+import { Inews } from '../interfaces';
 
-export function NewsItem({ item }) {
+interface Props {
+  item: Inews
+}
+
+export function NewsItem({ item }: Props) {
   return (
     <li className="flex gap-3">
       {item.image !== 'None' ? (
