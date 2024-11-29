@@ -14,8 +14,8 @@ export function NewsItem({ item }: Props) {
         <div className="bg-gray-200 h-16 w-16 flex-initial"></div>
       )}
       <div className="flex flex-col flex-1 gap-1">
-        <h3 className="font-semibold text-sm leading-5">{item.title}</h3>
-        <p className="text-xs leading-4">{`${formatTimeAgo(
+        <h3 className="font-semibold text-sm leading-5 ">{item.title}</h3>
+        <p className="text-xs leading-4 dark:text-gray-300">{`${formatTimeAgo(
           item.published
         )} by ${item.author}`}</p>
       </div>
