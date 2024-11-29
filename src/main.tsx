@@ -3,12 +3,16 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { App } from './App.js';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import ThemeProvider from './context/ThemeContext.js';
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </ThemeProvider>
   </StrictMode>
 );
