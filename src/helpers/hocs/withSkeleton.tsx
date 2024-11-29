@@ -1,8 +1,18 @@
 import { clsx } from 'clsx';
 import { SkeletonNews } from '../../components/Skeleton';
+import { SkeletonType } from '../../interfaces';
 
-export function withSkeleton(Component, type, count, direction = 'column') {
-  return function WithSkeleton(props) {
+interface Props {
+  isLoading: boolean;
+}
+
+export function withSkeleton<P extends object>(
+  Component: React.ComponentType<P>,
+  type?: SkeletonType,
+  count?: number,
+  direction = 'column'
+) {
+  return function WithSkeleton(props: Props & P) {
     const { isLoading, ...restProps } = props;
     if (isLoading) {
       return (
@@ -16,6 +26,6 @@ export function withSkeleton(Component, type, count, direction = 'column') {
         </ul>
       );
     }
-    return <Component {...restProps} />;
+    return <Component {...(restProps as P)} />;
   };
 }

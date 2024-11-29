@@ -1,7 +1,12 @@
 import { withSkeleton } from '../helpers/hocs/withSkeleton';
+import { Inews } from '../interfaces';
 import { NewsItem } from './NewsItem';
 
-function NewsList({ isLoading, newsList }) {
+interface Props {
+  newsList?: Inews[];
+}
+
+function NewsList({ newsList }: Props) {
   return (
     <ul className="grid grid-cols-1 gap-4">
       {newsList?.map((el) => (
@@ -11,4 +16,4 @@ function NewsList({ isLoading, newsList }) {
   );
 }
 
-export const NewsListWithSkeleton = withSkeleton(NewsList, 'sm', 10);
+export const NewsListWithSkeleton = withSkeleton<Props>(NewsList, 'sm', 10);

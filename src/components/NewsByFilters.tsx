@@ -2,22 +2,22 @@ import { useQuery } from 'react-query';
 import { PAGE_SIZE, TOTAL_PAGES } from '../constants';
 import { Categories } from './Categories';
 import { NewsListWithSkeleton } from './NewsList.';
-import { Pagenation } from './Pagenation';
 import { Search } from './Search';
 import { getCategories, getNews } from '../api/apiNews';
 import { useState } from 'react';
 import { useDebounce } from '../hooks/useDebounce';
 import { PaginationWrapper } from './PaginationWrapper';
 import { Slider } from './Slider';
+import { CategoriesApiResponse, NewsApiResponse } from '../interfaces';
 
 export function NewsByFilters() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectCategory, setSelectCategory] = useState('All');
-  const [keywords, setKeywords] = useState('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectCategory, setSelectCategory] = useState<string | null>('All');
+  const [keywords, setKeywords] = useState<string>('');
 
   const debounceKeywords = useDebounce(keywords, 1000);
 
-  const { isLoading, data: news } = useQuery(
+  const { isLoading, data } = useQuery<NewsApiResponse>(
     [currentPage, selectCategory, debounceKeywords],
     () =>
       getNews({
@@ -31,7 +31,7 @@ export function NewsByFilters() {
     }
   );
 
-  const { data: dataCategories } = useQuery(
+  const { data: dataCategories } = useQuery<CategoriesApiResponse, null>(
     'getCategories',
     () => getCategories(),
     {
@@ -47,7 +47,7 @@ export function NewsByFilters() {
     setCurrentPage(currentPage - 1);
   }
 
-  function hendelPageClick(page) {
+  function hendelPageClick(page: number) {
     setCurrentPage(page);
   }
 
@@ -56,7 +56,7 @@ export function NewsByFilters() {
       {dataCategories && (
         <Slider>
           <Categories
-            categories={['All', ...dataCategories]}
+            categories={dataCategories.categories}
             selectCategory={selectCategory}
             setSelectCategory={setSelectCategory}
           />
@@ -72,7 +72,7 @@ export function NewsByFilters() {
         hendelPrevPage={hendelPrevPage}
         hendelPageClick={hendelPageClick}
       >
-        <NewsListWithSkeleton isLoading={isLoading} newsList={news} />
+        <NewsListWithSkeleton isLoading={isLoading} newsList={data?.news} />
       </PaginationWrapper>
     </section>
   );

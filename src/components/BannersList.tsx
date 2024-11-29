@@ -1,7 +1,12 @@
 import { withSkeleton } from '../helpers/hocs/withSkeleton';
+import { Inews } from '../interfaces';
 import { NewsBanner } from './NewsBanner';
 
-function BannerList({ isLoading, banners }) {
+interface Props {
+  banners?: Inews[] | null;
+}
+
+function BannerList({ banners }: Props) {
   return (
     <ul className="grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-3 max-h-[1200px] overflow-y-auto scrollbar-thin max-md:overflow-y-hidden">
       {banners?.map((banner) => (
@@ -11,4 +16,9 @@ function BannerList({ isLoading, banners }) {
   );
 }
 
-export const BannerListWithSkeleton = withSkeleton(BannerList, 'lg', 20, 'row');
+export const BannerListWithSkeleton = withSkeleton<Props>(
+  BannerList,
+  'lg',
+  20,
+  'row'
+);

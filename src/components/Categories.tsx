@@ -1,9 +1,15 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
+import { ForwardedRef, forwardRef } from 'react';
+
+interface Props {
+  categories: string[];
+  selectCategory: string | null;
+  setSelectCategory: (category: string | null) => void;
+}
 
 export const Categories = forwardRef(function (
-  { categories, selectCategory, setSelectCategory },
-  ref
+  { categories, selectCategory, setSelectCategory }: Props,
+  ref: ForwardedRef<HTMLDivElement>
 ) {
   return (
     <div
