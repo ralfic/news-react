@@ -1,20 +1,12 @@
-import { useQuery } from 'react-query';
 import { BannerListWithSkeleton } from './BannersList';
-import { getLatestNews } from '../api/apiNews';
-import {  NewsApiResponse } from '../interfaces';
+import { useGetLatestNewsQuery } from '../store/services/newsApi';
 
 export function LatestNews() {
-  const { isLoading, data: banners } = useQuery<NewsApiResponse, null>(
-    'getLatestNews',
-    () => getLatestNews(),
-    {
-      keepPreviousData: true,
-    }
-  );
+  const { data,  isLoading } = useGetLatestNewsQuery(null);
 
   return (
     <section className="flex flex-col w-full gap-8 ">
-      <BannerListWithSkeleton banners={banners && banners.news} isLoading={isLoading} />
+      <BannerListWithSkeleton banners={data && data.news} isLoading={isLoading} />
     </section>
   );
 }
