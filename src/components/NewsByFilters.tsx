@@ -1,54 +1,46 @@
-import { useQuery } from 'react-query';
-import { PAGE_SIZE, TOTAL_PAGES } from '../constants';
+import { TOTAL_PAGES } from '../constants';
 import { Categories } from './Categories';
 import { NewsListWithSkeleton } from './NewsList.';
 import { Search } from './Search';
-import { getCategories, getNews } from '../api/apiNews';
-import { useState } from 'react';
 import { useDebounce } from '../hooks/useDebounce';
 import { PaginationWrapper } from './PaginationWrapper';
 import { Slider } from './Slider';
-import { CategoriesApiResponse, NewsApiResponse } from '../interfaces';
+import {
+  useGetCategoriesQuery,
+  useGetNewsQuery,
+} from '../store/services/newsApi';
+import { useAppDispatch, useAppSelector } from '../store';
+import { setFilters } from '../store/slices/newsSlice';
 
 export function NewsByFilters() {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectCategory, setSelectCategory] = useState<string | null>('All');
-  const [keywords, setKeywords] = useState<string>('');
+  const dispatch = useAppDispatch();
 
-  const debounceKeywords = useDebounce(keywords, 1000);
+  const filters = useAppSelector((state) => state.news.filters);
+  const news = useAppSelector((state) => state.news.news);
 
-  const { isLoading, data } = useQuery<NewsApiResponse>(
-    [currentPage, selectCategory, debounceKeywords],
-    () =>
-      getNews({
-        page_number: currentPage,
-        page_size: PAGE_SIZE,
-        category: selectCategory === 'All' ? null : selectCategory,
-        keywords: keywords,
-      }),
-    {
-      keepPreviousData: true,
-    }
-  );
+  const debounceKeywords = useDebounce(filters.keywords, 1000);
 
-  const { data: dataCategories } = useQuery<CategoriesApiResponse, null>(
-    'getCategories',
-    () => getCategories(),
-    {
-      keepPreviousData: true,
-    }
-  );
+  const { isLoading } = useGetNewsQuery({
+    ...filters,
+    keywords: debounceKeywords,
+  });
+
+  const { data: dataCategories } = useGetCategoriesQuery(null);
 
   function hendelNextPage() {
-    setCurrentPage(currentPage + 1);
+    dispatch(
+      setFilters({ key: 'page_number', value: filters.page_number + 1 })
+    );
   }
 
   function hendelPrevPage() {
-    setCurrentPage(currentPage - 1);
+    dispatch(
+      setFilters({ key: 'page_number', value: filters.page_number - 1 })
+    );
   }
 
   function hendelPageClick(page: number) {
-    setCurrentPage(page);
+    dispatch(setFilters({ key: 'page_number', value: page }));
   }
 
   return (
@@ -57,22 +49,29 @@ export function NewsByFilters() {
         <Slider>
           <Categories
             categories={dataCategories.categories}
-            selectCategory={selectCategory}
-            setSelectCategory={setSelectCategory}
+            selectCategory={filters.category}
+            setSelectCategory={(category) =>
+              dispatch(setFilters({ key: 'category', value: category }))
+            }
           />
         </Slider>
       )}
-      <Search keywords={keywords} setKeywords={setKeywords} />
+      <Search
+        keywords={filters.keywords}
+        setKeywords={(keywords) =>
+          dispatch(setFilters({ key: 'keywords', value: keywords }))
+        }
+      />
       <PaginationWrapper
         top={true}
         bottom={true}
         totalPages={TOTAL_PAGES}
-        currentPage={currentPage}
+        currentPage={filters.page_number}
         hendelNextPage={hendelNextPage}
         hendelPrevPage={hendelPrevPage}
         hendelPageClick={hendelPageClick}
       >
-        <NewsListWithSkeleton isLoading={isLoading} newsList={data?.news} />
+        <NewsListWithSkeleton isLoading={isLoading} newsList={news} />
       </PaginationWrapper>
     </section>
   );
