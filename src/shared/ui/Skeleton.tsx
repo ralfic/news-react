@@ -7,12 +7,12 @@ interface Props {
   count?: number;
 }
 
-export function SkeletonNews({ count = 1, type = 'sm' }: Props) {
+export function SkeletonNews({ count = 1, type = 'item' }: Props) {
   return (
     <>
       {[...Array(count)].map((_, index) => (
         <li className="w-full list-none" key={index}>
-          <Skeleton height={type === 'lg' ? 240 : 64} />
+          <Skeleton height={type === 'banner' ? 240 : 64} />
         </li>
       ))}
     </>
