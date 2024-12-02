@@ -1,31 +1,31 @@
 import { clsx } from 'clsx';
-import { SkeletonType } from '../interfaces';
+import { DirectioneType, SkeletonType } from '../interfaces';
 import { SkeletonNews } from '../ui/Skeleton';
 
 interface Props {
   isLoading: boolean;
+  direction?: DirectioneType;
+  type?: SkeletonType;
 }
 
 export function withSkeleton<P extends object>(
   Component: React.ComponentType<P>,
-  type?: SkeletonType,
-  count?: number,
-  direction = 'column'
+  count?: number
 ) {
   return function WithSkeleton(props: Props & P) {
-    const { isLoading, ...restProps } = props;
+    const { isLoading, type, direction = 'column', ...restProps } = props;
     if (isLoading) {
       return (
         <ul
           className={clsx(
             direction === 'row' &&
-              'grid grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))] gap-3'
+              'grid grid-cols-[repeat(auto-fill,_minmax(220px,_1fr))] gap-3'
           )}
         >
           <SkeletonNews type={type} count={count} />;
         </ul>
       );
     }
-    return <Component {...(restProps as P)} />;
+    return <Component type={type} {...(restProps as P)} />;
   };
 }
