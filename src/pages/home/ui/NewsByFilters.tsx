@@ -5,10 +5,11 @@ import { TOTAL_PAGES } from '@/shared/constants';
 import { useGetNewsQuery } from '@/entities/news/api/newsApi';
 import { setFilters } from '@/entities/news/modal/newsSlice';
 import { useDebounce } from '@/shared/hooks/useDebounce';
-import { NewsListWithSkeleton } from '@/widgets/news/ui';
+import { NewsList } from '@/widgets/news/ui';
 import { Search } from '@/features/search';
 import { Pagination } from '@/features/pagination';
 import { useGetCategoriesQuery } from '@/entities/category/api/categoriesApi';
+import { usePaginationNews } from '../utils/hooks/usePaginationNews';
 
 export function NewsByFilters() {
   const dispatch = useAppDispatch();
@@ -25,21 +26,8 @@ export function NewsByFilters() {
 
   const { data: dataCategories } = useGetCategoriesQuery(null);
 
-  function hendelNextPage() {
-    dispatch(
-      setFilters({ key: 'page_number', value: filters.page_number + 1 })
-    );
-  }
-
-  function hendelPrevPage() {
-    dispatch(
-      setFilters({ key: 'page_number', value: filters.page_number - 1 })
-    );
-  }
-
-  function hendelPageClick(page: number) {
-    dispatch(setFilters({ key: 'page_number', value: page }));
-  }
+  const { hendelNextPage, hendelPrevPage, hendelPageClick } =
+    usePaginationNews(filters);
 
   return (
     <section className="flex flex-col gap-6">
@@ -69,7 +57,12 @@ export function NewsByFilters() {
         hendelPrevPage={hendelPrevPage}
         hendelPageClick={hendelPageClick}
       >
-        <NewsListWithSkeleton isLoading={isLoading} newsList={news} />
+        <NewsList
+          isLoading={isLoading}
+          news={news}
+          type="item"
+          direction="column"
+        />
       </Pagination>
     </section>
   );

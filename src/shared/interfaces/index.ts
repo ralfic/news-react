@@ -9,6 +9,6 @@ export interface Ifilters {
 
 export type ParamsType = Partial<Ifilters>;
 
-export type SkeletonType = 'lg' | 'sm';
-export type DiractioneType = 'column' | 'row';
+export type SkeletonType = 'banner' | 'item';
+export type DirectioneType = 'column' | 'row';
 
