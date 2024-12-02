@@ -2,14 +2,16 @@ import { Inews } from '@/entities/news';
 import { NewsCard } from '@/entities/news/ui/NewsCard';
 import { withSkeleton } from '@/shared/hocs/withSkeleton';
 import clsx from 'clsx';
+import { ReactNode } from 'react';
 
 interface Props {
   news?: Inews[];
   type?: 'banner' | 'item';
   direction?: 'row' | 'column';
+  viewNewsSlot?: (news: Inews) => ReactNode;
 }
 
-function NewsList({ news, type = 'item' }: Props) {
+function NewsList({ news, type = 'item', viewNewsSlot }: Props) {
   return (
     <ul
       className={clsx(
@@ -19,7 +21,12 @@ function NewsList({ news, type = 'item' }: Props) {
       )}
     >
       {news?.map((item) => (
-        <NewsCard key={item.id} item={item} type={type} />
+        <NewsCard
+          key={item.id}
+          viewNewsSlot={viewNewsSlot}
+          item={item}
+          type={type}
+        />
       ))}
     </ul>
   );
