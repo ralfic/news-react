@@ -1,8 +1,7 @@
 import { Header } from '@/widgets/header/ui/Header';
 import { useTheme } from '@/app/providers/ThemeProvider';
 import clsx from 'clsx';
-import { HomePage } from '@/pages/home/ui/Page';
-
+import { Outlet } from 'react-router';
 
 export function BaseLayout() {
   const { isDark } = useTheme();
@@ -12,7 +11,7 @@ export function BaseLayout() {
     >
       <Header />
       <div className="p-6">
-        <HomePage />
+        <Outlet />
       </div>
     </div>
   );
