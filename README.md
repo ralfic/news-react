@@ -1,1 +1,1 @@
-Licnk site: https://news-react-kappa-five.vercel.app/
+Site: https://news-react-kappa-five.vercel.app/
